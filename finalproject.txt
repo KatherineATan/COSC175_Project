@@ -1,0 +1,137 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+
+using namespace std;
+int numberOfTimes=0;
+int itemNumber[10];
+string itemName[10];
+float itemPrice[10];
+int itemQuantity[10];
+
+
+void addItemDetails(){
+    string item = "";
+    cout<<"Add an Item Number: "<<endl;
+    cin>>itemNumber[numberOfTimes];
+    cout<<"Add an Item Name: "<<endl;
+    cin>>item;
+    itemName[numberOfTimes] = item;
+    cout<<"Add an Item Price: "<<endl;
+    cin>>itemPrice[numberOfTimes];
+    cout<<"Add an Item Quantity: "<<endl;
+    cin>>itemQuantity[numberOfTimes];
+    numberOfTimes++;
+}
+void editItemDetails(){
+    string input="";
+    string inputName="";
+    int inputQuantity=0;
+    cout<<"Would you like to change the item's 'name', 'price', or 'quantity'?"<<endl; 
+    cin>>input; 
+    if (input=="name"){
+        cout<<"Which item name would you like to change?"<<endl;
+        cin>>inputName; 
+        for ( int counter=0;counter< sizeof(itemName); counter++) {
+            if(inputName==itemName[counter]){ 
+                cout<<"what would you like the new name to be?"<<endl; 
+                cin>>itemName[counter]; 
+                counter=sizeof(itemName); 
+            } 
+
+        }
+    } 
+    if (input=="price"){
+        cout<<"what item price would you like to change?"<<endl; 
+        cin>>inputName; 
+        for( int counter=0;counter< sizeof(itemPrice); counter++){
+            if(inputName==itemName[counter]){ 
+                cout<<"what would you like the new price to be?"<<endl; 
+                cin>>itemPrice[counter]; 
+                counter=sizeof(itemPrice);
+            }
+        }
+    }
+    if (input=="quantity"){ 
+        cout<<"what item quantity do you want to change?"<<endl; 
+        cin>>inputName; 
+        for( int counter=0;counter< sizeof(itemQuantity); counter++){
+            if(inputName==itemName[counter]){ 
+                cout<<"what would you like the new quantity to be?"<<endl; 
+                cin>>itemQuantity[counter]; 
+                counter=sizeof(itemQuantity);
+            }
+        }
+    }
+}
+void returnItem(){
+    string viewItems="";
+    string nameInput="";
+    int placement;
+    bool found=false;
+    cout<<"Would you like to view items? Type 'yes' or 'no'"<<endl;
+    cin>>viewItems;
+    while(viewItems=="yes"){
+        cout<<"Type in the name of the item you would like to view."<<endl;
+        cin>>nameInput;
+        for(int counter=0; counter<sizeof(itemName); counter++){
+            if(nameInput==itemName[counter]){
+                placement=counter;
+                counter=sizeof(itemName);
+                found=true;
+            }
+        }
+        if(found){
+            cout<<"Item number: "<<itemNumber[placement]<<endl;
+            cout<<"Item name: "<<itemName[placement]<<endl;
+            cout<<"Item price: "<<itemPrice[placement]<<endl;
+            cout<<"Item Quantity: "<<itemQuantity[placement]<<endl;
+            found=false;
+        }
+        cout<<"Would you like to view items? Type 'yes' or 'no'"<<endl;
+        cin>>viewItems;
+    }
+}
+void printReceipt(){
+    ofstream writer;
+    float totalPrice=0;
+    float taxPercent=.06;
+    cout<<"Item Number------Item Name------Item Quantity------Item Price Per Unit------Total Price"<<endl;
+    writer.open("receipt.store");
+    writer<<"Item Number------Item Name------Item Quantity------Item Price Per Unit------Total Price"<<endl;
+    for (int counter=0; counter<sizeof(itemNumber); counter++){
+        if(itemQuantity[counter]!=0){
+            totalPrice= totalPrice+(itemPrice[counter]*itemQuantity[counter]);
+            cout<<itemNumber[counter]<<"   "<<itemName[counter]<<"   "<<itemQuantity[counter]<<"   "<<itemPrice[counter]<<"   "<<(itemPrice[counter]*itemQuantity[counter])<<endl;
+            writer<<itemNumber[counter]<<"   "<<itemName[counter]<<"   "<<itemQuantity[counter]<<"   "<<itemPrice[counter]<<"   "<<(itemPrice[counter]*itemQuantity[counter])<<endl;
+        }else{
+            counter=sizeof(itemNumber);
+        }
+    }
+    writer.close();
+    cout<<"Total Price without tax: "<<totalPrice<<endl;
+    cout<<"Total Price with tax: "<<totalPrice+(totalPrice*taxPercent)<<endl;
+}
+
+int main(){
+    int menuOption=0;
+    while(menuOption!=5){
+        cout<<"Menu Options: "<<endl;
+        cout<<"1- Add Item Details"<<endl;
+        cout<<"2- Edit Item Details"<<endl;
+        cout<<"3- Return Items"<<endl;
+        cout<<"4- Print receipt"<<endl;
+        cout<<"Please enter the number cooresponding to the menu option you want or type in 5 to exit the program"<<endl;
+        cin>>menuOption;
+        if(menuOption==1){
+            addItemDetails();
+        }else if(menuOption==2){
+            editItemDetails();
+        }else if(menuOption==3){
+            returnItem();
+        }else if(menuOption==4){
+            printReceipt();
+        }
+    }
+    return 0;
+}
